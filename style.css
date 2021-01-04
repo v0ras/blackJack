@@ -1,0 +1,28 @@
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+body {
+  background-color: dimgray;
+}
+#pirmas {
+  display: flex;
+  flex-direction: row;
+  width: auto;
+
+  /* flex-wrap: wrap; */
+}
+
+#pirmas,
+img {
+  height: 50%;
+  width: 40%;
+}
+
+#info {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  background-color: rgb(190, 192, 194);
+}
