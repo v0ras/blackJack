@@ -5,7 +5,7 @@
 
 body {
   background: linear-gradient(145deg, #1a472a 0%, #0a2a1a 100%);
-  font-family: 'Segoe UI', system-ui, 'Roboto', sans-serif;
+  font-family: "Segoe UI", system-ui, "Roboto", sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,7 +38,9 @@ body {
   padding: 12px 28px;
   text-align: center;
   flex: 1;
-  box-shadow: inset 0 1px 3px rgba(255,255,200,0.2), 0 8px 12px rgba(0,0,0,0.3);
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 200, 0.2),
+    0 8px 12px rgba(0, 0, 0, 0.3);
 }
 
 .info-box h3 {
@@ -67,7 +69,9 @@ body {
   background: #2a3a25;
   border-radius: 32px;
   padding: 20px;
-  box-shadow: inset 0 0 0 1px rgba(255,255,210,0.2), 0 8px 20px black;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 210, 0.2),
+    0 8px 20px black;
 }
 
 .cards-section h3 {
@@ -84,17 +88,36 @@ body {
   min-height: 180px;
 }
 
-.cards img {
-  width: 90px;
-  height: auto;
+/* Tekstinės kortos stilius */
+.card {
+  width: 80px;
+  height: 110px;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-  transition: transform 0.1s;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: bold;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  background: #f9f9f9;
+  color: #2c1a0a;
 }
 
-.cards img:hover {
-  transform: scale(1.02);
+.card.back {
+  background: #2c5a2a;
+  color: #ffd966;
+  font-size: 2rem;
+  justify-content: center;
+}
+
+.card-value {
+  font-size: 1.8rem;
+}
+
+.card-suit {
+  font-size: 2.2rem;
 }
 
 .controls {
