@@ -1,25 +1,25 @@
 // ---------- KORTŲ KALADĖ ----------
-const SUITS = ['S', 'C', 'D', 'H'];      // Spades, Clubs, Diamonds, Hearts
-const VALUES = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+const SUITS = ["S", "C", "D", "H"];
+const VALUES = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 
-let deck = [];          // kortų objektų masyvas
+let deck = [];
 let playerCards = [];
 let compCards = [];
 let gameActive = false;
 
 // DOM elementai
-const playerCardsDiv = document.getElementById('playerCards');
-const compCardsDiv = document.getElementById('compCards');
-const playerPointsSpan = document.getElementById('playerPoints');
-const compPointsSpan = document.getElementById('compPoints');
-const cardsLeftSpan = document.getElementById('cardsLeft');
-const messageDiv = document.getElementById('message');
-const controlsDiv = document.getElementById('controls');
+const playerCardsDiv = document.getElementById("playerCards");
+const compCardsDiv = document.getElementById("compCards");
+const playerPointsSpan = document.getElementById("playerPoints");
+const compPointsSpan = document.getElementById("compPoints");
+const cardsLeftSpan = document.getElementById("cardsLeft");
+const messageDiv = document.getElementById("message");
+const controlsDiv = document.getElementById("controls");
 
 // ---------- Pagalbinės funkcijos ----------
 function getCardValue(card) {
-  if (card.value === 'A') return 11;
-  if (['K', 'Q', 'J'].includes(card.value)) return 10;
+  if (card.value === "A") return 11;
+  if (["K", "Q", "J"].includes(card.value)) return 10;
   return parseInt(card.value);
 }
 
@@ -28,11 +28,7 @@ function createDeck() {
   const newDeck = [];
   for (let suit of SUITS) {
     for (let val of VALUES) {
-      newDeck.push({
-        value: val,
-        suit: suit,
-        img: `assets/img/cards/${val}${suit}.png`   // kelias pagal tavo kortų failus
-      });
+      newDeck.push({ value: val, suit: suit });
     }
   }
   // Fisher-Yates maišymas
@@ -50,51 +46,56 @@ function calculatePoints(hand) {
   for (let card of hand) {
     let val = getCardValue(card);
     sum += val;
-    if (card.value === 'A') aces++;
+    if (card.value === "A") aces++;
   }
   while (sum > 21 && aces > 0) {
-    sum -= 10;   // tūzas nuo 11 virsta 1
+    sum -= 10;
     aces--;
   }
   return sum;
 }
 
-// Atvaizduoja kortas HTML
+// Atvaizduoja kortas HTML (tekstinės kortos)
 function renderCards() {
-  // Žaidėjas
-  playerCardsDiv.innerHTML = '';
-  playerCards.forEach(card => {
-    const img = document.createElement('img');
-    img.src = card.img;
-    img.alt = `${card.value}${card.suit}`;
-    playerCardsDiv.appendChild(img);
+  // Žaidėjo kortos
+  playerCardsDiv.innerHTML = "";
+  playerCards.forEach((card) => {
+    const cardDiv = document.createElement("div");
+    cardDiv.className = "card";
+    cardDiv.innerHTML = `
+      <div class="card-value">${card.value}</div>
+      <div class="card-suit">${card.suit}</div>
+    `;
+    playerCardsDiv.appendChild(cardDiv);
   });
 
-  // Kompiuteris (jei žaidimas aktyvus – rodom tik pirmą kortą, kitas užverstas)
-  compCardsDiv.innerHTML = '';
+  // Kompiuterio kortos
+  compCardsDiv.innerHTML = "";
   compCards.forEach((card, idx) => {
-    const img = document.createElement('img');
-    if (gameActive && idx === 0) {
-      img.src = card.img;
-    } else if (!gameActive) {
-      img.src = card.img;
+    const cardDiv = document.createElement("div");
+    if (!gameActive || idx !== 0) {
+      cardDiv.className = "card";
+      cardDiv.innerHTML = `
+        <div class="card-value">${card.value}</div>
+        <div class="card-suit">${card.suit}</div>
+      `;
     } else {
-      img.src = 'assets/img/cards/back.png';   // užversta korta
+      cardDiv.className = "card back";
+      cardDiv.innerHTML = `<div class="card-value">?</div>`;
     }
-    img.alt = `${card.value}${card.suit}`;
-    compCardsDiv.appendChild(img);
+    compCardsDiv.appendChild(cardDiv);
   });
 
+  // Atnaujiname taškus ir kortų likutį
   playerPointsSpan.textContent = calculatePoints(playerCards);
   if (!gameActive) {
     compPointsSpan.textContent = calculatePoints(compCards);
   } else {
-    // žaidimo metu rodome tik pirmos kortos taškus (apytikriai)
     if (compCards.length > 0) {
       const firstCardVal = getCardValue(compCards[0]);
       compPointsSpan.textContent = `${firstCardVal} + ?`;
     } else {
-      compPointsSpan.textContent = '0';
+      compPointsSpan.textContent = "0";
     }
   }
   cardsLeftSpan.textContent = deck.length;
@@ -104,11 +105,10 @@ function renderCards() {
 function endGame(message) {
   gameActive = false;
   messageDiv.textContent = message;
-  renderCards();  // parodome visas kompiuterio kortas
+  renderCards(); // parodome visas kompiuterio kortas
   compPointsSpan.textContent = calculatePoints(compCards);
-  // Pridedame mygtuką "Naujas žaidimas"
   controlsDiv.innerHTML = '<button id="newGameBtn">🎲 Naujas žaidimas</button>';
-  document.getElementById('newGameBtn').addEventListener('click', () => location.reload());
+  document.getElementById("newGameBtn").addEventListener("click", () => location.reload());
 }
 
 // Kompiuterio ėjimas
@@ -122,17 +122,17 @@ function computerTurn() {
   renderCards();
 
   const playerSum = calculatePoints(playerCards);
-  if (compSum > 21) endGame('🎉 Kompiuteris pralaimėjo! Tu laimėjai! 🎉');
-  else if (compSum > playerSum) endGame('🤖 Kompiuteris laimėjo...');
-  else if (compSum === playerSum) endGame('😲 Lygiosios!');
-  else endGame('🎉 Tu laimėjai! 🎉');
+  if (compSum > 21) endGame("🎉 Kompiuteris pralaimėjo! Tu laimėjai! 🎉");
+  else if (compSum > playerSum) endGame("🤖 Kompiuteris laimėjo...");
+  else if (compSum === playerSum) endGame("😲 Lygiosios!");
+  else endGame("🎉 Tu laimėjai! 🎉");
 }
 
 // Žaidėjas pasiima dar vieną kortą
 function playerHit() {
   if (!gameActive) return;
   if (deck.length === 0) {
-    endGame('🍂 Kortų nebėra – lygiosios.');
+    endGame("🍂 Kortų nebėra – lygiosios.");
     return;
   }
   const newCard = deck.pop();
@@ -141,9 +141,9 @@ function playerHit() {
 
   const playerSum = calculatePoints(playerCards);
   if (playerSum > 21) {
-    endGame('💀 BUST! Pralaimėjai...');
+    endGame("💀 BUST! Pralaimėjai...");
   } else if (playerSum === 21) {
-    endGame('🎉 BLACKJACK! Tu laimėjai! 🎉');
+    endGame("🎉 BLACKJACK! Tu laimėjai! 🎉");
   }
 }
 
@@ -169,24 +169,22 @@ function startNewGame() {
   compCards.push(deck.pop());
 
   renderCards();
-  messageDiv.textContent = 'Tavo eilė – imk kortą arba sustok.';
+  messageDiv.textContent = "Tavo eilė – imk kortą arba sustok.";
 
-  // Sukuriame mygtukus
   controlsDiv.innerHTML = `
     <button id="hitBtn">🃏 Imti kortą</button>
     <button id="standBtn">✋ Sustoti</button>
   `;
-  document.getElementById('hitBtn').addEventListener('click', playerHit);
-  document.getElementById('standBtn').addEventListener('click', playerStand);
+  document.getElementById("hitBtn").addEventListener("click", playerHit);
+  document.getElementById("standBtn").addEventListener("click", playerStand);
 
-  // Patikriname, ar iškart blackjack
   const playerSum = calculatePoints(playerCards);
   if (playerSum === 21) {
-    endGame('🎉 BLACKJACK! Tu laimėjai! 🎉');
+    endGame("🎉 BLACKJACK! Tu laimėjai! 🎉");
   }
 }
 
 // Paleidžiame žaidimą
-document.getElementById('startBtn').addEventListener('click', () => {
+document.getElementById("startBtn").addEventListener("click", () => {
   startNewGame();
 });
